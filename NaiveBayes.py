@@ -1,0 +1,1 @@
+# data set path Diego: C:\Users\diego\.cache\kagglehub\datasets\pariza\bbc-news-summary\versions\2\BBC News Summary
