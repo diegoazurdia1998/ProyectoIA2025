@@ -26,7 +26,7 @@ def preprocess(text):
     return text.split()
 
 # Cargar y preprocesar datos
-df = load_data("\pariza\bbc-news-summary\versions\2\BBC News Summary\Summaries")  # Cambia la ruta
+df = load_data("C:\\Users\\diego\\Documents\\1Universidad\\IA\\Proyecto\\ProyectoIA2025\\pariza\\bbc-news-summary\\versions\\2\\BBC News Summary")  # Cambia la ruta
 df["tokens"] = df["text"].apply(preprocess)
 
 # Dividir en 80% entrenamiento, 20% prueba (stratified para mantener proporción de clases)
@@ -90,11 +90,6 @@ class MultinomialNB:
             predictions.append(max(posteriors, key=posteriors.get))
         return predictions
 
-
-# Entrenar y evaluar
-model = MultinomialNB()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
 
 if __name__ == "__main__":
     # Entrenar y evaluar el modelo
