@@ -1,4 +1,24 @@
 <?php
+date_default_timezone_set('America/Guatemala');
+function guardarHistorial($noticia, $categoria) {
+    $fecha = date("Y-m-d H:i:s");
+    $noticiaCorta = substr(preg_replace("/\s+/", " ", $noticia), 0, 80);
+
+    $linea = [$fecha, $noticiaCorta, $categoria];
+    $rutaCSV = '../historial.csv';
+
+    $archivoExiste = file_exists($rutaCSV);
+    $f = fopen($rutaCSV, 'a');
+
+    if (!$archivoExiste) {
+        fputcsv($f, ['Fecha y hora', 'Noticia', 'Categoría predicha'], ',', '"', '\\');
+    }
+
+    fputcsv($f, $linea, ',', '"', '\\');
+    fclose($f);
+}
+
+
 function mostrarResultado($noticia, $categoria) {
     echo '
     <!DOCTYPE html>
@@ -44,6 +64,11 @@ function mostrarResultado($noticia, $categoria) {
             button:hover {
                 background-color: #004a99;
             }
+            .volver {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
         </style>
     </head>
     <body>
@@ -56,11 +81,19 @@ function mostrarResultado($noticia, $categoria) {
                 <h2>🔍 Categoría predicha:</h2>
                 <strong>' . htmlspecialchars($categoria) . '</strong>
             </div>
-            <a href="index.html"><button>Subir otra noticia</button></a>
+            <div class="volver">
+                <a href="index.html" style="text-decoration: none;">
+                    <button>📤 Subir otra noticia</button>
+                </a>
+                <a href="historial.php" style="text-decoration: none;">
+                    <button style="background-color: #888;">📜 Ver historial</button>
+                </a>
+            </div>
         </div>
     </body>
     </html>';
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] == 0) {
@@ -81,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $contenidoEscapado = escapeshellarg($contenido);
             $rutaPython = '../NaiveBayes.py';
             $categoria = trim(shell_exec("python $rutaPython $contenidoEscapado"));
-
+            guardarHistorial($contenido, $categoria);
             mostrarResultado($contenido, $categoria);
         } else {
             echo "Error al subir el archivo.";
