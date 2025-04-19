@@ -1,12 +1,11 @@
-# ruta datasetC:\Users\diego\Documents\1Universidad\IA\Proyecto\ProyectoIA2025\pariza\bbc-news-summary\versions\2\BBC News Summary\Summaries
-
-# Imports
 import os
+import sys
 import pandas as pd
 import numpy as np
 from collections import defaultdict
 import re
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
 
 # Función para cargar datos
 def load_data(base_path):
@@ -25,36 +24,35 @@ def preprocess(text):
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     return text.split()
 
+# 📁 Ruta relativa al dataset desde la ubicación del script actual
+BASE_PATH = os.path.join(os.path.dirname(__file__), "pariza", "bbc-news-summary", "versions", "2", "BBC News Summary")
+
 # Cargar y preprocesar datos
-df = load_data("C:\\Users\\diego\\Documents\\1Universidad\\IA\\Proyecto\\ProyectoIA2025\\pariza\\bbc-news-summary\\versions\\2\\BBC News Summary")  # Cambia la ruta
+df = load_data(BASE_PATH)
 df["tokens"] = df["text"].apply(preprocess)
 
-# Dividir en 80% entrenamiento, 20% prueba (stratified para mantener proporción de clases)
+# Dividir datos
 X_train, X_test, y_train, y_test = train_test_split(
     df["tokens"],
     df["category"],
     test_size=0.2,
     random_state=42,
-    stratify=df["category"]  # Importante para clases desbalanceadas
+    stratify=df["category"]
 )
 
-
-# Construir vocabulario solo con datos de entrenamiento
+# Construir vocabulario
 def build_vocabulary(tokens_list):
     vocabulary = defaultdict(int)
     for tokens in tokens_list:
         for token in tokens:
             vocabulary[token] += 1
-    # Filtrar palabras raras (ejemplo: frecuencia mínima 3)
     vocabulary = {word: count for word, count in vocabulary.items() if count >= 3}
     return vocabulary
-
 
 vocabulary = build_vocabulary(X_train)
 word_index = {word: idx for idx, word in enumerate(vocabulary.keys())}
 
-
-# Implementación de Naive Bayes Multinomial
+# Modelo Naive Bayes
 class MultinomialNB:
     def __init__(self):
         self.prior = {}
@@ -82,7 +80,6 @@ class MultinomialNB:
                 log_posterior = np.log(self.prior[c])
                 for token in tokens:
                     if token in word_index:
-                        # Suavizado Laplace (add-1)
                         count = self.word_counts[c].get(token, 0) + 1
                         total = self.class_totals[c] + len(word_index)
                         log_posterior += np.log(count / total)
@@ -91,25 +88,19 @@ class MultinomialNB:
         return predictions
 
 
+# ✅ Si se ejecuta directamente
 if __name__ == "__main__":
-    # Entrenar y evaluar el modelo
     model = MultinomialNB()
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
 
-    # Métricas de evaluación
-    from sklearn.metrics import accuracy_score, classification_report
-
-    print("\n🔍 **Resultados del Modelo**")
-    print(f"Precisión: {accuracy_score(y_test, y_pred):.2f}")
-    print("\n📊 Reporte de Clasificación:")
-    print(classification_report(y_test, y_pred))
-
-    # Ejemplo de predicción manual
-    test_news = ["Apple announced a new iPhone today", "The football team won the championship"]
-    test_tokens = [preprocess(text) for text in test_news]
-    test_pred = model.predict(test_tokens)
-
-    print("\n📰 **Predicciones de Ejemplo**")
-    for text, pred in zip(test_news, test_pred):
-        print(f"Noticia: '{text}' \n→ Categoría predicha: {pred}\n")
+    if len(sys.argv) > 1:
+        input_text = sys.argv[1]
+        input_tokens = [preprocess(input_text)]
+        pred = model.predict(input_tokens)
+        print(pred[0])
+    else:
+        y_pred = model.predict(X_test)
+        print("\n🔍 Resultados del Modelo")
+        print(f"Precisión: {accuracy_score(y_test, y_pred):.2f}")
+        print("\n📊 Reporte de Clasificación:")
+        print(classification_report(y_test, y_pred))
