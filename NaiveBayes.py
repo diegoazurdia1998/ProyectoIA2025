@@ -6,6 +6,8 @@ from collections import defaultdict
 import re
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
+import json
+from sklearn.metrics import classification_report
 
 # Función para cargar datos
 def load_data(base_path):
@@ -100,7 +102,11 @@ if __name__ == "__main__":
         print(pred[0])
     else:
         y_pred = model.predict(X_test)
-        print("\n🔍 Resultados del Modelo")
-        print(f"Precisión: {accuracy_score(y_test, y_pred):.2f}")
-        print("\n📊 Reporte de Clasificación:")
-        print(classification_report(y_test, y_pred))
+        acc = accuracy_score(y_test, y_pred)
+        report = classification_report(y_test, y_pred, output_dict=True)
+        output = {
+            "accuracy": round(acc, 2),
+            "report": report
+        }
+
+        print(json.dumps(output))

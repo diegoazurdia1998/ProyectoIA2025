@@ -113,6 +113,7 @@ if (file_exists($rutaCSV) && filesize($rutaCSV) > 0) {
         <div class="volver">
             <a href="index.html"><button>📤 Subir otra noticia</button></a>
             <a href="../historial.csv" download><button>⬇️ Descargar CSV</button></a>
+            <a href="precision.php"><button style="background-color:#ff6600;">📈 Ver precisión del modelo</button></a>
         </div>
     </div>
 </body>
