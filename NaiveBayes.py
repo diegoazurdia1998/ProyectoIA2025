@@ -99,27 +99,9 @@ if __name__ == "__main__":
         input_text = sys.argv[1]
         input_tokens = [preprocess(input_text)]
         pred = model.predict(input_tokens)
-        categoria = pred[0]
-        print(f"🧠 Categoría predicha: {categoria}")
-
-        # 📍 Ruta a la carpeta de categoría dentro del dataset
-        folder_path = os.path.join(BASE_PATH, "News Articles", categoria)
-
-        if os.path.isdir(folder_path):
-            import time
-            timestamp = int(time.time())
-            filename = f"{timestamp}.txt"
-            file_path = os.path.join(folder_path, filename)
-
-            with open(file_path, "w", encoding="utf-8") as f:
-                f.write(input_text)
-
-            print(f"✅ Noticia guardada correctamente en: {file_path}")
-        else:
-            print(f"❌ La categoría '{categoria}' no existe en el dataset. No se guardó la noticia.")
+        print(pred[0])
     else:
         y_pred = model.predict(X_test)
-<<<<<<< HEAD
         acc = accuracy_score(y_test, y_pred)
         report = classification_report(y_test, y_pred, output_dict=True)
         output = {
@@ -128,10 +110,3 @@ if __name__ == "__main__":
         }
 
         print(json.dumps(output))
-=======
-        print("\n🔍 Resultados del Modelo")
-        print(f"Precisión: {accuracy_score(y_test, y_pred):.2f}")
-        print("\n📊 Reporte de Clasificación:")
-        print(classification_report(y_test, y_pred))
-
->>>>>>> 12c6f9d31c28fcb5654998f41872fcb931eebffd
