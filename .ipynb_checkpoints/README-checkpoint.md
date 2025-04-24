@@ -18,9 +18,7 @@ Este proyecto implementa un clasificador de noticias utilizando el algoritmo Nai
 
     Calcula:
     - Probabilidades a priori (P(clase)).
-
     - Frecuencias de palabras por clase (P(palabra|clase)).
-
     - Aplica suavizado Laplace para evitar probabilidades cero.
 
 #### Predicción:
