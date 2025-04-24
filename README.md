@@ -11,5 +11,14 @@ Este proyecto implementa un clasificador de noticias utilizando el algoritmo Nai
         - JSON
         - RE
 # 👨‍🦼‍➡️ Ejecución
-En una terminal dentro del directorio del proyecto ejecutar el comendo
+En una terminal dentro del directorio del proyecto ejecutar el comando
     php -S localhost:8000
+
+# Uso de la página web
+    Se puede hacer clic en el botón para ingresar un archivo o arrastrar el archivo desde el buscador de archivos hacia el botón.
+    Luego debe hacerse clic en el botón de "Hacer predicción".
+    El programa procesará el archivo y mostrará la predicción.
+
+# Observaciones importantes
+    - Al ingresar la primera noticia de prueba el programa muestra un error. Se debe regresar a la página anterior y volver a hacer clic en "Hacer predicción".
+
