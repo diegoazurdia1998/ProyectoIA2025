@@ -126,7 +126,7 @@ class MultinomialNB:
 
         return predictions
 
-# Ejecución principal
+# Ejecución principalg
 if __name__ == "__main__":
     def main():
         model = MultinomialNB()
