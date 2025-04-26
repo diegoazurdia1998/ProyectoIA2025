@@ -26,9 +26,9 @@ def preprocess(text):
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     return text.split()
 
-# 📁 Ruta relativa al dataset
+# Ruta relativa al dataset
 BASE_PATH = os.path.join(os.path.dirname(__file__), "pariza", "bbc-news-summary", "versions", "2", "BBC News Summary")
-PROBABILITIES_FILE = os.path.join(os.path.dirname(__file__), "Data.csv")  # ✅ corregido para evitar doble ProyectoIA2025
+PROBABILITIES_FILE = os.path.join(os.path.dirname(__file__), "Data.csv")
 
 # Cargar y preprocesar datos
 df = load_data(BASE_PATH)
@@ -51,7 +51,7 @@ def build_vocabulary(tokens_list):
 vocabulary = build_vocabulary(X_train)
 word_index = {word: idx for idx, word in enumerate(vocabulary.keys())}
 
-# 📂 Función para cargar probabilidades desde Data.csv
+# Función para cargar probabilidades desde Data.csv
 def load_probabilities():
     probabilities = {}
     if os.path.exists(PROBABILITIES_FILE):
@@ -64,7 +64,7 @@ def load_probabilities():
                 probabilities[label] = probability
     return probabilities
 
-# 📦 Guardar probabilidades
+# Guardar probabilidades
 def save_probabilities(priors):
     # Asegúrate de que la ruta existe
     os.makedirs(os.path.dirname(PROBABILITIES_FILE), exist_ok=True)  # ✅ asegurarse que el directorio exista
@@ -114,7 +114,7 @@ class MultinomialNB:
             best_class = max(posteriors, key=posteriors.get)
             predictions.append(best_class)
 
-            # 📝 Guardar texto si es clasificado correctamente
+            # Guardar texto si es clasificado correctamente
             if len(sys.argv) > 1:
                 original_text = sys.argv[1]
                 target_dir = os.path.join(BASE_PATH, "News Articles", best_class)
@@ -126,7 +126,7 @@ class MultinomialNB:
 
         return predictions
 
-# ✅ Ejecución principal
+# Ejecución principal
 if __name__ == "__main__":
     def main():
         model = MultinomialNB()
